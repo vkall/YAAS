@@ -14,15 +14,13 @@ def home(request):
 
 
 def create_auction(request):
-    auction = Auction()
-
     if request.method == "POST" and "name" in request.POST:
+        auction = Auction()
         auction.name = request.POST["name"]
         auction.category = request.POST["category"]
         auction.startDate = request.POST["startDate"]
         auction.endDate = request.POST["endDate"]
         auction.save()
-
         return HttpResponseRedirect('/YAAS/')
     else:
         template = "create_auction.html"
