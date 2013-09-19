@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YAAS</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+</head>
+<body>
+<div id="top">
+    <div id="menu">
+        <ul>
+            <li><a href="/YAAS/">Home</a></li>
+            <li><a href="/YAAS/">Browse categories</a></li>
+            <li><a href="/YAAS/create_auction/">Create auction</a></li>
+        </ul>
+        <h1>YAAS - Yet Another Auction Site</h1>
+    </div>
+    <form id="login">
+        <table>
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value=" Login "></td>
+                <td><a href="/YAAS/">Register</a></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="content">
+    <div id="search">
+        <table>
+            <tr>
+                <td>Criteria:</td>
+                <td><input type="text" name="username"></td>
+                <td><input type="submit" value="Search"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="auctions">
+        <table>
+            <tr>
+                <th>Auction title</th>
+                <th>Category</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+            {% for a in auctions %}
+                <tr>
+                    <td><a href="/YAAS/">{{ a.name }}</a></td>
+                    <td>{{ a.category }}</td>
+                    <td>{{ a.startDate }}</td>
+                    <td>{{ a.endDate }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>

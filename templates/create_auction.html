@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YAAS</title>
+</head>
+<body>
+    <form action="/YAAS/create_auction/" method="post">
+        {% csrf_token %}
+        Auction name: <input type="text" name="name" >
+        Category: <input type="text" name="category" >
+        Start date (YYYY-MM-DD HH:MM): <input type="text" name="startDate" >
+        End date (YYYY-MM-DD HH:MM): <input type="text" name="endDate" >
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>
