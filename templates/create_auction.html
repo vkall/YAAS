@@ -2,15 +2,17 @@
 <html>
 <head>
     <title>YAAS</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
 </head>
 <body>
     <form action="/YAAS/create_auction/" method="post">
         {% csrf_token %}
-        Auction name: <input type="text" name="name" >
-        Category: <input type="text" name="category" >
-        Start date (YYYY-MM-DD HH:MM): <input type="text" name="startDate" >
-        End date (YYYY-MM-DD HH:MM): <input type="text" name="endDate" >
-        <input type="submit" value="Save">
+        <p>Auction name: <input type="text" name="name" ></p>
+        <p>Category: <input type="text" name="category" ></p>
+        <p>Start date (YYYY-MM-DD HH:MM): <input type="text" name="startDate" ></p>
+        <p>End date (YYYY-MM-DD HH:MM): <input type="text" name="endDate" ></p>
+        <p><input type="submit" value="Save"></p>
     </form>
 </body>
 </html>

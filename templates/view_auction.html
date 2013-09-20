@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ auction.name }}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+</head>
+<body>
+    <p><b>Auction ID:</b> {{ auction.id }}</p>
+    <p><b>Auction name:</b> {{ auction.name }}</p>
+    <p><b>Category:</b> {{ auction.category }}</p>
+    <p><b>Start date:</b> {{ auction.startDate }}</p>
+    <p><b>End date:</b> {{ auction.endDate }}</p>
+</body>
+</html>

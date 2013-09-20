@@ -10,7 +10,7 @@
     <div id="menu">
         <ul>
             <li><a href="/YAAS/">Home</a></li>
-            <li><a href="/YAAS/">Browse categories</a></li>
+            <li><a href="#">Browse categories</a></li>
             <li><a href="/YAAS/create_auction/">Create auction</a></li>
         </ul>
         <h1>YAAS - Yet Another Auction Site</h1>
@@ -27,7 +27,7 @@
             </tr>
             <tr>
                 <td><input type="submit" value=" Login "></td>
-                <td><a href="/YAAS/">Register</a></td>
+                <td><a href="#">Register</a></td>
             </tr>
         </table>
     </form>
@@ -52,7 +52,7 @@
             </tr>
             {% for a in auctions %}
                 <tr>
-                    <td><a href="/YAAS/">{{ a.name }}</a></td>
+                    <td><a href="/YAAS/view_auction/{{ a.id }}/">{{ a.name }}</a></td>
                     <td>{{ a.category }}</td>
                     <td>{{ a.startDate }}</td>
                     <td>{{ a.endDate }}</td>
