@@ -7,3 +7,4 @@ Made with:
 - Python 2.7.5
 - Django 1.5.4
 - SQLite3
+- Bootstrap 3 (css styling)

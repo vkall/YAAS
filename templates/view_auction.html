@@ -2,14 +2,55 @@
 <html>
 <head>
     <title>{{ auction.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 </head>
 <body>
-    <p><b>Auction ID:</b> {{ auction.id }}</p>
-    <p><b>Auction name:</b> {{ auction.name }}</p>
-    <p><b>Category:</b> {{ auction.category }}</p>
-    <p><b>Start date:</b> {{ auction.startDate }}</p>
-    <p><b>End date:</b> {{ auction.endDate }}</p>
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <a href="/YAAS/" class="navbar-brand">Yet Another Auction Site</a>
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse navHeaderCollapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/YAAS/">Home</a></li>
+                <li><a href="#">Browse categories</a></li>
+                <li><a href="/YAAS/create_auction/">Create auction</a></li>
+                <li><a href="#">Register</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Log in <strong class="caret"></strong></a>
+                    <div class="dropdown-menu" style="padding: 15px;">
+                        <form class="form" id="formLogin">
+                            <input style="margin-bottom: 10px;" type="text" name="username"placeholder=" Username"><br/>
+                            <input style="margin-bottom: 10px;" type="password" name="password" placeholder=" Password"><br/>
+                            <input class="btn btn-default" style="width:172px" type="submit" value="Log in"/>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="col-md-5">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ auction.name }}</h3>
+            </div>
+            <div class="panel-body">
+                <p><b>Auction ID:</b> {{ auction.id }}</p>
+                <p><b>Category:</b> {{ auction.category }}</p>
+                <p><b>Start date:</b> {{ auction.startDate }}</p>
+                <p><b>End date:</b> {{ auction.endDate }}</p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

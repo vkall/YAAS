@@ -2,17 +2,79 @@
 <html>
 <head>
     <title>YAAS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
 </head>
 <body>
-    <form action="/YAAS/create_auction/" method="post">
-        {% csrf_token %}
-        <p>Auction name: <input type="text" name="name" ></p>
-        <p>Category: <input type="text" name="category" ></p>
-        <p>Start date (YYYY-MM-DD HH:MM): <input type="text" name="startDate" ></p>
-        <p>End date (YYYY-MM-DD HH:MM): <input type="text" name="endDate" ></p>
-        <p><input type="submit" value="Save"></p>
-    </form>
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <a href="/YAAS/" class="navbar-brand">Yet Another Auction Site</a>
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse navHeaderCollapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/YAAS/">Home</a></li>
+                <li><a href="#">Browse categories</a></li>
+                <li class="active"><a href="/YAAS/create_auction/">Create auction</a></li>
+                <li><a href="#">Register</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Log in <strong class="caret"></strong></a>
+                    <div class="dropdown-menu" style="padding: 15px;">
+                        <form class="form" id="formLogin">
+                            <input style="margin-bottom: 10px;" type="text" name="username"placeholder=" Username"><br/>
+                            <input style="margin-bottom: 10px;" type="password" name="password" placeholder=" Password"><br/>
+                            <input class="btn btn-default" style="width:172px" type="submit" value="Log in"/>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="col-md-6">
+        <form class="form-horizontal" action="/YAAS/create_auction/" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Create a new auction</legend>
+                <div class="form-group">
+                    <label for="inputName" class="col-md-3 control-label">Title</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="inputName" name="name" placeholder="Auction title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputCategory" class="col-md-3 control-label">Category</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="inputCategory" name="category" placeholder="Category">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputStart" class="col-md-3 control-label">Start date</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="inputStart" name="startDate" placeholder="YYYY-MM-DD HH:MM">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEnd" class="col-md-3 control-label">End date</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="inputEnd" name="endDate" placeholder="YYYY-MM-DD HH:MM">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" class="btn btn-primary" style="width:120px;" value="Save">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
 </body>
 </html>
