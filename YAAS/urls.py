@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     (r'^YAAS/$', home),
     (r'^YAAS/create_auction/$', create_auction),
     (r'^YAAS/view_auction/(?P<id>\d+)/$', view_auction),
+    (r'^YAAS/register/$', register_user),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

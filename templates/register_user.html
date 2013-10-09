@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer="defer" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <script defer="defer" src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+</head>
+<body>
+{% include "navbar.html" %}
+<div class="container">
+    <form class="form-horizontal" action="/YAAS/register/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-primary" style="width:120px;" value="Register">
+    </form>
+</div>
+</body>
+</html>
