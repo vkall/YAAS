@@ -4,10 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from YAAS_app.models import *
 from YAAS_app.forms import *
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-#from django.contrib.auth.forms import UserCreationForm
 
 
 def home(request):
@@ -74,17 +72,15 @@ def login_user(request):
                 # Login passed, redirect to next page.
                 return HttpResponseRedirect(redirect)
             else:
-                # Return a 'disabled account' error message
                 msg = "This account has been disabled."
                 context = {"message": msg}
                 return render_to_response(template, context, context_instance=RequestContext(request))
         else:
-            # Return an 'invalid login' error message.
             msg = "Invalid username or password."
             context = {"message": msg}
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        msg = "Please log in using the form in the navigation bar."
+        msg = "Please login using the form in the navigation bar."
         context = {"message": msg}
         return render_to_response(template, context, context_instance=RequestContext(request))
 
