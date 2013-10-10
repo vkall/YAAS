@@ -6,6 +6,7 @@ from YAAS_app.models import *
 from YAAS_app.forms import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -15,6 +16,7 @@ def home(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
+@login_required
 def create_auction(request):
     if request.method == "POST" and all(val in request.POST for val in ["name", "category", "startDate", "endDate"]):
         auction = Auction()
@@ -60,20 +62,31 @@ def register_user(request):
 
 
 def login_user(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            # Redirect to a success page.
-            return HttpResponseRedirect("/YAAS/")
+    template = "login.html"
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        redirect = request.GET.get('next', '/YAAS/')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                # Login passed, redirect to next page.
+                return HttpResponseRedirect(redirect)
+            else:
+                # Return a 'disabled account' error message
+                msg = "This account has been disabled."
+                context = {"message": msg}
+                return render_to_response(template, context, context_instance=RequestContext(request))
         else:
-            # Return a 'disabled account' error message
-            return HttpResponseRedirect("/YAAS/")
+            # Return an 'invalid login' error message.
+            msg = "Invalid username or password."
+            context = {"message": msg}
+            return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        # Return an 'invalid login' error message.
-        return HttpResponseRedirect("/YAAS/")
+        msg = "Please log in using the form in the navigation bar."
+        context = {"message": msg}
+        return render_to_response(template, context, context_instance=RequestContext(request))
 
 
 def logout_user(request):
