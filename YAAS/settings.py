@@ -157,3 +157,4 @@ LOGGING = {
 }
 
 LOGIN_URL = '/YAAS/login/'
+LOGIN_REDIRECT_URL = '/YAAS/'

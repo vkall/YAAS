@@ -4,6 +4,8 @@ from YAAS_app.views import *
 from django.contrib import admin
 admin.autodiscover()
 
+from django.contrib.auth.views import login, logout
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'YAAS.views.home', name='home'),
@@ -12,8 +14,8 @@ urlpatterns = patterns('',
     (r'^YAAS/create_auction/$', create_auction),
     (r'^YAAS/view_auction/(?P<id>\d+)/$', view_auction),
     (r'^YAAS/register/$', register_user),
-    (r'^YAAS/login/$', login_user),
-    (r'^YAAS/logout/$', logout_user),
+    (r'^YAAS/login/$', login, {'template_name': 'login.html'}),
+    (r'^YAAS/logout/$', logout, {'next_page': '/YAAS/'}),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

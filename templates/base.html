@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}YAAS{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer="defer" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     {% load staticfiles %}
@@ -33,6 +33,7 @@
                             {% csrf_token %}
                             <input style="margin-bottom: 10px;" type="text" name="username"placeholder=" Username"><br/>
                             <input style="margin-bottom: 10px;" type="password" name="password" placeholder=" Password"><br/>
+                            <input type="hidden" name="next" value="{{ next|escape }}">
                             <input class="btn btn-default" style="width:172px" type="submit" value="Login"/>
                         </form>
                     </div>

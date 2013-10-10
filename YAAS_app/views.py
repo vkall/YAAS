@@ -58,33 +58,3 @@ def register_user(request):
     context = {"form": form}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
-
-def login_user(request):
-    template = "login.html"
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        redirect = request.GET.get('next', '/YAAS/')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                # Login passed, redirect to next page.
-                return HttpResponseRedirect(redirect)
-            else:
-                msg = "This account has been disabled."
-                context = {"message": msg}
-                return render_to_response(template, context, context_instance=RequestContext(request))
-        else:
-            msg = "Invalid username or password."
-            context = {"message": msg}
-            return render_to_response(template, context, context_instance=RequestContext(request))
-    else:
-        msg = "Please login using the form in the navigation bar."
-        context = {"message": msg}
-        return render_to_response(template, context, context_instance=RequestContext(request))
-
-
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect("/YAAS/")
