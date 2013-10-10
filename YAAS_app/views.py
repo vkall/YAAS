@@ -4,8 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from YAAS_app.models import *
 from YAAS_app.forms import *
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -21,10 +21,11 @@ def create_auction(request):
         form = CreateAuctionForm(request.POST)
         if form.is_valid():
             auction = Auction()
-            auction.name = form.cleaned_data["title"]
-            auction.category = form.cleaned_data["category"]
-            auction.startDate = form.cleaned_data["start_date"]
-            auction.endDate = form.cleaned_data["end_date"]
+            auction.title = form.cleaned_data["title"]
+            auction.seller = request.user
+            auction.description = form.cleaned_data["description"]
+            auction.end_date = form.cleaned_data["end_date"]
+            auction.minimum_price = form.cleaned_data["minimum_price"]
             auction.save()
             return HttpResponseRedirect("/YAAS/")
     else:
@@ -35,13 +36,15 @@ def create_auction(request):
 
 
 def view_auction(request, id):
-    auctions = Auction.objects.filter(id=id)
-    if len(auctions) > 0:
+    auction = Auction.getById(id)
+    if auction:
         template = "view_auction.html"
-        context = {"auction": Auction.getById(id)}
+        context = {"auction": auction}
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        return HttpResponse("Auction not found")
+        template = "message.html"
+        context = {"message": "Auction not found"}
+        return render_to_response(template, context, context_instance=RequestContext(request))
 
 
 def register_user(request):
@@ -50,7 +53,9 @@ def register_user(request):
         if form.is_valid():
             # Save user and redirect to front page
             form.save()
-            return HttpResponseRedirect("/YAAS/")
+            template = "message.html"
+            context = {"message": "User successfully created, please login."}
+            return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         # Empty user form
         form = UserRegistrationForm()

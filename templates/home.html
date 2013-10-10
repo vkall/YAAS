@@ -16,18 +16,20 @@
             <thead>
             <tr>
                 <th>Auction title</th>
-                <th>Category</th>
-                <th>Start date</th>
+                <th>Seller</th>
                 <th>End date</th>
+                <th>Minimum price</th>
+                <th>Current bid</th>
             </tr>
             </thead>
             <tbody>
             {% for a in auctions %}
                 <tr>
-                    <td><a href="/YAAS/view_auction/{{ a.id }}/">{{ a.name }}</a></td>
-                    <td>{{ a.category }}</td>
-                    <td>{{ a.startDate }}</td>
-                    <td>{{ a.endDate }}</td>
+                    <td><a href="/YAAS/view_auction/{{ a.id }}/">{{ a.title }}</a></td>
+                    <td>{{ a.seller.get_full_name }}</td>
+                    <td>{{ a.end_date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ a.minimum_price|floatformat:2 }}</td>
+                    <td>{{ a.current_bid|floatformat:2 }}</td>
                 </tr>
             {% endfor %}
             </tbody>
