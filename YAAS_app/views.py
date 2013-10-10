@@ -7,6 +7,7 @@ from YAAS_app.forms import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.forms import UserCreationForm
 
 
 def home(request):
@@ -18,17 +19,21 @@ def home(request):
 
 @login_required
 def create_auction(request):
-    if request.method == "POST" and all(val in request.POST for val in ["name", "category", "startDate", "endDate"]):
-        auction = Auction()
-        auction.name = request.POST["name"]
-        auction.category = request.POST["category"]
-        auction.startDate = request.POST["startDate"]
-        auction.endDate = request.POST["endDate"]
-        auction.save()
-        return HttpResponseRedirect("/YAAS/")
+    if request.method == "POST":
+        form = CreateAuctionForm(request.POST)
+        if form.is_valid():
+            auction = Auction()
+            auction.name = form.cleaned_data["title"]
+            auction.category = form.cleaned_data["category"]
+            auction.startDate = form.cleaned_data["start_date"]
+            auction.endDate = form.cleaned_data["end_date"]
+            auction.save()
+            return HttpResponseRedirect("/YAAS/")
     else:
-        template = "create_auction.html"
-        return render_to_response(template, context_instance=RequestContext(request))
+        form = CreateAuctionForm()
+    template = "create_auction.html"
+    context = {"form": form}
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 
 def view_auction(request, id):
@@ -46,12 +51,7 @@ def register_user(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             # Save user and redirect to front page
-            user = User.objects.create_user(username=form.cleaned_data["username"],
-                                            email=form.cleaned_data["email"],
-                                            password=form.cleaned_data["password"],
-                                            first_name=form.cleaned_data["firstname"],
-                                            last_name=form.cleaned_data["lastname"])
-            user.save()
+            form.save()
             return HttpResponseRedirect("/YAAS/")
     else:
         # Empty user form

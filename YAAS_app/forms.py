@@ -1,8 +1,15 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
-class UserRegistrationForm(forms.Form):
-    firstname = forms.CharField()
-    lastname = forms.CharField()
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(widget=forms.PasswordInput)
-    email = forms.EmailField()
+
+class UserRegistrationForm(UserCreationForm):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+
+
+class CreateAuctionForm(forms.Form):
+    title = forms.CharField(max_length=30)
+    category = forms.CharField(max_length=30)
+    start_date = forms.DateTimeField()
+    end_date = forms.DateTimeField()
