@@ -6,6 +6,7 @@ from YAAS_app.models import *
 from YAAS_app.forms import *
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from fixtures import *
 
 
 def home(request):
@@ -79,3 +80,8 @@ def register_user(request):
     template = "register_user.html"
     context = {"form": form}
     return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+def populate_database(request):
+    Populate().doPopulate()
+    return HttpResponseRedirect("/YAAS/")

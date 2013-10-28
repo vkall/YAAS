@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     (r'^YAAS/logout/$', logout, {'next_page': '/YAAS/'}),
     (r'^YAAS/confirmation/$', confirmation),
 
+    # Comment the line below to disable database fixture
+    (r'^YAAS/populate_database/$', populate_database),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
