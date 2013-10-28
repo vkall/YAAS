@@ -35,6 +35,12 @@ class CreateAuctionForm(forms.ModelForm):
         return cleaned_data
 
 
+class EditAuctionForm(forms.ModelForm):
+    class Meta:
+        model = Auction
+        fields = ('description',)
+
+
 class ConfirmationForm(forms.Form):
     CHOICES = [(x, x) for x in ("Yes", "No")]
     option = forms.ChoiceField(choices=CHOICES)

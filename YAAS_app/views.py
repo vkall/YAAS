@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from YAAS_app.models import *
 from YAAS_app.forms import *
@@ -23,6 +23,7 @@ def create_auction(request):
         if form.is_valid():
             template = "confirmation.html"
             context = {"form": ConfirmationForm(), "auctionform": form}
+            # Valid auction form, redirect to confirmation page
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         form = CreateAuctionForm()
@@ -34,6 +35,7 @@ def create_auction(request):
 def confirmation(request):
     option = request.POST.get('option', '')
     if option == 'Yes':
+        # Confirmation was 'Yes', save auction, send email and redirect to front page.
         form = CreateAuctionForm(request.POST)
         if form.is_valid():
             auction = Auction()
@@ -49,7 +51,8 @@ def confirmation(request):
             return HttpResponseRedirect("/YAAS/")
 
     template = "message.html"
-    context = {"message": "Auction not created"}
+    context = {"message": "Auction was not created"}
+    # Auction was not created
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
@@ -62,6 +65,36 @@ def view_auction(request, id):
     else:
         template = "message.html"
         context = {"message": "Auction not found"}
+        return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def edit_auction(request, id):
+    auction = Auction.getById(id)
+    if auction:
+        if request.user.id != auction.seller.id:
+            template = "message.html"
+            context = {"message": "Only the seller of an auction can edit it!"}
+            # Error: Logged in user is not the same as the seller!
+            return render_to_response(template, context, context_instance=RequestContext(request))
+        else:
+            if request.method == "POST":
+                form = EditAuctionForm(request.POST)
+                if form.is_valid():
+                    auction.description = form.cleaned_data["description"]
+                    auction.save()
+                    # If logged in user is the same as the seller and request is POST, save edits
+                    return HttpResponseRedirect("/YAAS/view_auction/" + str(auction.id) + "/")
+            else:
+                form = EditAuctionForm({"description": auction.description})
+            template = "edit_auction.html"
+            context = {"form": form, "auction": auction}
+            # If logged in user is the same as the seller and request is not POST, view edit form
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        template = "message.html"
+        context = {"message": "Auction not found"}
+        # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))
 
 
