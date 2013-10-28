@@ -158,3 +158,5 @@ LOGGING = {
 
 LOGIN_URL = '/YAAS/login/'
 LOGIN_REDIRECT_URL = '/YAAS/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

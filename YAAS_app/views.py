@@ -5,7 +5,7 @@ from django.template import RequestContext
 from YAAS_app.models import *
 from YAAS_app.forms import *
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 
 def home(request):
@@ -27,6 +27,9 @@ def create_auction(request):
             auction.end_date = form.cleaned_data["end_date"]
             auction.minimum_price = form.cleaned_data["minimum_price"]
             auction.save()
+            message = "This is a confirmation message that you just created an auction with the title \""
+            message += auction.title + "\"."
+            send_mail("Auction created", message, "noreply@YAAS.com", [auction.seller.email], fail_silently=False)
             return HttpResponseRedirect("/YAAS/")
     else:
         form = CreateAuctionForm()
@@ -62,4 +65,3 @@ def register_user(request):
     template = "register_user.html"
     context = {"form": form}
     return render_to_response(template, context, context_instance=RequestContext(request))
-
