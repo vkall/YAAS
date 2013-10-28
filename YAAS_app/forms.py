@@ -33,3 +33,8 @@ class CreateAuctionForm(forms.ModelForm):
             self._errors["end_date"] = self.error_class([msg])
 
         return cleaned_data
+
+
+class ConfirmationForm(forms.Form):
+    CHOICES = [(x, x) for x in ("Yes", "No")]
+    option = forms.ChoiceField(choices=CHOICES)

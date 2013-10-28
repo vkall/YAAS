@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     (r'^YAAS/login/$', login, {'template_name': 'message.html',
                                'extra_context': {'message': 'Please sign in using the login form in the navigation bar.'}}),
     (r'^YAAS/logout/$', logout, {'next_page': '/YAAS/'}),
+    (r'^YAAS/confirmation/$', confirmation),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

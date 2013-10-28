@@ -20,6 +20,21 @@ def create_auction(request):
     if request.method == "POST":
         form = CreateAuctionForm(request.POST)
         if form.is_valid():
+            template = "confirmation.html"
+            context = {"form": ConfirmationForm(), "auctionform": form}
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        form = CreateAuctionForm()
+    template = "create_auction.html"
+    context = {"form": form}
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+def confirmation(request):
+    option = request.POST.get('option', '')
+    if option == 'Yes':
+        form = CreateAuctionForm(request.POST)
+        if form.is_valid():
             auction = Auction()
             auction.title = form.cleaned_data["title"]
             auction.seller = request.user
@@ -31,10 +46,9 @@ def create_auction(request):
             message += auction.title + "\"."
             send_mail("Auction created", message, "noreply@YAAS.com", [auction.seller.email], fail_silently=False)
             return HttpResponseRedirect("/YAAS/")
-    else:
-        form = CreateAuctionForm()
-    template = "create_auction.html"
-    context = {"form": form}
+
+    template = "message.html"
+    context = {"message": "Auction not created"}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
