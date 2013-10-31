@@ -20,6 +20,13 @@ class UserRegistrationForm(UserCreationForm):
         return user
 
 
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('password', 'email')
+
+
+
 class CreateAuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
