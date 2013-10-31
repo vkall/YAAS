@@ -15,7 +15,7 @@
                 <p><b>Start date:</b> {{ auction.start_date|date:"d.m.Y H:i" }}</p>
                 <p><b>End date:</b> {{ auction.end_date|date:"d.m.Y H:i" }}</p>
                 <p><b>Minimum price:</b> {{ auction.minimum_price|floatformat:2 }}</p>
-                <p><b>Current bid:</b> {{ auction.current_bid|floatformat:2 }}</p>
+                <p><b>Current bid:</b> </p>
                 <a href="/YAAS/edit_auction/{{ auction.id }}/" class="btn btn-default">Edit this auction</a>
             </div>
         </div>
