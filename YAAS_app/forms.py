@@ -20,10 +20,9 @@ class UserRegistrationForm(UserCreationForm):
         return user
 
 
-class EditUserForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('password', 'email')
+class EditUserForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField()
 
 
 

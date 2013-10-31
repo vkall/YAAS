@@ -131,15 +131,16 @@ def register_user(request):
 def edit_user(request):
     user = request.user
     if request.method == "POST":
-        form = EditUserForm()
+        form = EditUserForm(request.POST)
         if form.is_valid():
             # Save user and show message
-            form.save()
+            user.email = form.cleaned_data["email"]
+            user.set_password(form.cleaned_data["password"])
+            user.save()
             template = "message.html"
             context = {"message": "User info successfully updated."}
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        # Empty user form
         form = EditUserForm({"email": user.email})
     template = "edit_user.html"
     context = {"user": user, "form": form}
