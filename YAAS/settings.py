@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'YAAS_app',
+    'rest_framework',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
@@ -160,3 +161,11 @@ LOGIN_URL = '/YAAS/login/'
 LOGIN_REDIRECT_URL = '/YAAS/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}

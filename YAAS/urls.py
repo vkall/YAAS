@@ -1,15 +1,23 @@
 from django.conf.urls import patterns, include, url
 from YAAS_app.views import *
+from YAAS_app.api_views import *
 from django.contrib.auth.views import login, logout
+from rest_framework.urlpatterns import format_suffix_patterns
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 
+# RESTful API URLs
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'YAAS.views.home', name='home'),
-    # url(r'^YAAS/', include('YAAS.foo.urls')),
+                       (r'^YAAS/api/auctions/$', api_auctions),
+)
+
+urlpatterns = format_suffix_patterns(urlpatterns)
+
+# Application URLs
+urlpatterns += patterns('',
     (r'^YAAS/$', home),
     (r'^YAAS/search/$', search),
     (r'^YAAS/create_auction/$', create_auction),
