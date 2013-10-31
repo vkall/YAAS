@@ -11,7 +11,8 @@ admin.autodiscover()
 
 # RESTful API URLs
 urlpatterns = patterns('',
-                       (r'^YAAS/api/auctions/$', api_auctions),
+                       (r'^YAAS/api/auctions/$', api_list_auctions),
+                       (r'^YAAS/api/auctions/(?P<criteria>(\w\s*)+)/$', api_search_auctions),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
