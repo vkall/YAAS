@@ -2,6 +2,7 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.db.models import Q
 from YAAS_app.models import *
 from YAAS_app.forms import *
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,17 @@ def home(request):
     context = {"auctions": Auction.objects.all()}
 
     return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+def search(request):
+    if request.method == "POST" and "criteria" in request.POST:
+        criteria = request.POST["criteria"]
+        template = "home.html"
+        context = {"auctions": Auction.objects.filter(Q(title__contains=criteria) | Q(description__contains=criteria))}
+
+        return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect("/YAAS/")
 
 
 @login_required

@@ -3,10 +3,13 @@
 {% block title %}YAAS{% endblock %}
 
 {% block content %}
+
+    <div class="row"><label class="control-label pull-right">Search by title or description:</label></div>
     <div class="row">
-        <form class="form-inline pull-right" id="formSearch">
+        <form class="form-inline pull-right" action="/YAAS/search/" method="post">
+            {% csrf_token %}
             <div class="form-group pull-left">
-                <input type="text" class="form-control" name="searchCriteria" placeholder=" Search criteria">
+                <input type="text" class="form-control" name="criteria" placeholder=" Search criteria">
             </div>
             <input type="submit" class="btn btn-primary pull-right" value="Search">
         </form>
