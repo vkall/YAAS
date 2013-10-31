@@ -19,6 +19,7 @@
             <thead>
             <tr>
                 <th>Auction title</th>
+                <th>Description</th>
                 <th>Seller</th>
                 <th>End date</th>
                 <th>Minimum price</th>
@@ -29,6 +30,7 @@
             {% for a in auctions %}
                 <tr>
                     <td><a href="/YAAS/view_auction/{{ a.id }}/">{{ a.title }}</a></td>
+                    <td>{{ a.description|truncatechars:20 }}</td>
                     <td>{{ a.seller.get_full_name }}</td>
                     <td>{{ a.end_date|date:"d.m.Y H:i" }}</td>
                     <td>{{ a.minimum_price|floatformat:2 }}</td>

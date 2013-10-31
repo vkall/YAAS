@@ -20,7 +20,7 @@ class Populate:
     def addAuction(self, number):
         auction = Auction()
         auction.title = "Title" + str(number)
-        auction.description = "Description" + str(number)
+        auction.description = "This is a description of item number " + str(number)
         auction.minimum_price = 24.50 + number
         auction.end_date = timezone.now() + timedelta(days=randint(3, 7))
         auction.seller = User.objects.get(username="user"+str(randint(1,50)))
