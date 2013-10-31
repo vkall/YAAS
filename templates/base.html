@@ -11,19 +11,24 @@
 <body>
 <div class="navbar navbar-inverse navbar-static-top">
     <div class="container">
-        <a href="/YAAS/" class="navbar-brand">Yet Another Auction Site</a>
+        <b><a href="/YAAS/" class="navbar-brand">Yet Another Auction Site</a></b>
         <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
         <div class="collapse navbar-collapse navHeaderCollapse">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav">
                 <li><a href="/YAAS/">Home</a></li>
-                <li><a href="#">Browse categories</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="/YAAS/create_auction/">Create auction</a></li>
-                <li><a href="/YAAS/logout/">Logout {{ user.username }}</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <b><p class="navbar-text">Logged in as {{ user.username }}</p></b>
+                <li><a href="/YAAS/edit_user/">Edit user info</a></li>
+                <li><a href="/YAAS/logout/">Logout</a></li>
                 {% else %}
                 <li><a href="/YAAS/register/">Register new user</a></li>
                 <li class="dropdown">

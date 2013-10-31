@@ -114,7 +114,7 @@ def register_user(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            # Save user and redirect to front page
+            # Save user and show message
             form.save()
             template = "message.html"
             context = {"message": "User successfully created, please login."}
@@ -124,6 +124,25 @@ def register_user(request):
         form = UserRegistrationForm()
     template = "register_user.html"
     context = {"form": form}
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def edit_user(request):
+    user = request.user
+    if request.method == "POST":
+        form = EditUserForm()
+        if form.is_valid():
+            # Save user and show message
+            form.save()
+            template = "message.html"
+            context = {"message": "User info successfully updated."}
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        # Empty user form
+        form = EditUserForm({"email": user.email})
+    template = "edit_user.html"
+    context = {"user": user, "form": form}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
