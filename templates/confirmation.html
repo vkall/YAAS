@@ -7,10 +7,10 @@
         {% csrf_token %}
         <h3>Are you sure you want to create the auction?</h3>
         {{ form.as_p }}
-        <input type=hidden name="title" value={{ auctionform.title.value }}>
-        <input type=hidden name="description" value={{ auctionform.description.value }}>
-        <input type=hidden name="end_date" value={{ auctionform.end_date.value }}>
-        <input type=hidden name="minimum_price" value={{ auctionform.minimum_price.value }}>
+        <input type=hidden name="title" value="{{ auctionform.title.value }}">
+        <input type=hidden name="description" value="{{ auctionform.description.value }}">
+        <input type=hidden name="end_date" value="{{ auctionform.end_date.value }}">
+        <input type=hidden name="minimum_price" value="{{ auctionform.minimum_price.value }}">
         <input type="submit" class="btn btn-primary" style="width:120px;" value="Submit">
     </form>
 {% endblock %}
