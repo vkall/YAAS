@@ -12,7 +12,7 @@ from fixtures import *
 
 def home(request):
     template = "home.html"
-    context = {"auctions": Auction.objects.filter(Q(active=True) & Q(banned=False))}
+    context = {"auctions": Auction.getActive()}
 
     return render_to_response(template, context, context_instance=RequestContext(request))
 
@@ -21,7 +21,7 @@ def search(request):
     if request.method == "POST" and "criteria" in request.POST:
         criteria = request.POST["criteria"]
         template = "home.html"
-        context = {"auctions": Auction.objects.filter(Q(title__contains=criteria) | Q(description__contains=criteria))}
+        context = {"auctions": Auction.findActive(criteria)}
 
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
@@ -57,8 +57,8 @@ def confirmation(request):
             auction.end_date = form.cleaned_data["end_date"]
             auction.minimum_price = form.cleaned_data["minimum_price"]
             auction.save()
-            message = "This is a confirmation message that you just created an auction with the title \""
-            message += auction.title + "\"."
+            message = "This is a confirmation message that the following auction has been created: \n\n"
+            message += auction.information()
             send_mail("Auction created", message, "noreply@YAAS.com", [auction.seller.email], fail_silently=False)
             return HttpResponseRedirect("/YAAS/")
 
@@ -69,7 +69,7 @@ def confirmation(request):
 
 
 def view_auction(request, id):
-    auction = Auction.getById(id)
+    auction = Auction.getActiveById(id)
     if auction:
         template = "view_auction.html"
         context = {"auction": auction}
@@ -82,7 +82,7 @@ def view_auction(request, id):
 
 @login_required
 def edit_auction(request, id):
-    auction = Auction.getById(id)
+    auction = Auction.getActiveById(id)
     if auction:
         if request.user.id != auction.seller.id:
             template = "message.html"
@@ -105,6 +105,30 @@ def edit_auction(request, id):
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
+        context = {"message": "Auction not found"}
+        # Error: Auction not found!
+        return render_to_response(template, context, context_instance=RequestContext(request))
+
+
+@login_required
+def ban_auction(request, id):
+    auction = Auction.getActiveById(id)
+    template = "message.html"
+    if auction:
+        if request.user.is_superuser:
+            auction.banned = True
+            auction.save()
+            context = {"message": "Auction number " + str(auction.id) + " was banned!"}
+            # Auction banned, send email to seller
+            message = "The following auction has been banned: \n\n"
+            message += auction.information()
+            send_mail("Auction banned", message, "noreply@YAAS.com", [auction.seller.email], fail_silently=False)
+            return render_to_response(template, context, context_instance=RequestContext(request))
+        else:
+            context = {"message": "Must be admin to ban auction!"}
+            # Error: Logged in user is not an admin!
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
         context = {"message": "Auction not found"}
         # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))

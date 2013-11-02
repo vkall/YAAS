@@ -12,7 +12,7 @@ def api_list_auctions(request, format=None):
     # List all blog posts or create a new blog post
 
     if request.method == 'GET':
-        auctions = Auction.objects.filter(Q(active=True) & Q(banned=False))
+        auctions = Auction.getActive()
         serializer = AuctionSerializer(auctions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:
@@ -23,8 +23,12 @@ def api_search_auctions(request, criteria, format=None):
     # List all blog posts or create a new blog post
 
     if request.method == 'GET':
-        auctions = Auction.objects.filter(Q(title__contains=criteria) | Q(description__contains=criteria))
-        serializer = AuctionSerializer(auctions, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        auctions = Auction.findActive(criteria)
+        if auctions:
+            serializer = AuctionSerializer(auctions, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -16,7 +16,11 @@
                 <p><b>End date:</b> {{ auction.end_date|date:"d.m.Y H:i" }}</p>
                 <p><b>Minimum price:</b> {{ auction.minimum_price|floatformat:2 }}</p>
                 <p><b>Current bid:</b> </p>
-                <a href="/YAAS/edit_auction/{{ auction.id }}/" class="btn btn-default">Edit this auction</a>
+                <a href="/YAAS/ban_auction/{{ auction.id }}/" class="btn btn-success">Bid on auction</a>
+                <a href="/YAAS/edit_auction/{{ auction.id }}/" class="btn btn-default">Edit auction</a>
+                {% if user.is_superuser %}
+                <a href="/YAAS/ban_auction/{{ auction.id }}/" class="btn btn-danger">Ban auction</a>
+                {% endif %}
             </div>
         </div>
     </div>

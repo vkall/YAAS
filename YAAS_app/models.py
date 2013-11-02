@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 
 class Auction(models.Model):
@@ -16,12 +17,35 @@ class Auction(models.Model):
     banned = models.BooleanField(default=False)
 
     @classmethod
-    def getById(cls, auction_id):
+    def getActiveById(cls, auction_id):
         try:
             a = cls.objects.get(id=auction_id)
         except ObjectDoesNotExist:
             a = None
-        return a
+        if a and a.active and not a.banned:
+            return a
+        else:
+            return None
+
+    @classmethod
+    def getActive(cls):
+        return cls.objects.filter(Q(active=True) & Q(banned=False))
+
+    @classmethod
+    def findActive(cls, criteria):
+        return cls.objects.filter((Q(title__contains=criteria) | Q(description__contains=criteria))
+                                  & (Q(active=True) & Q(banned=False)))
+
+    def information(self):
+        info = "ID: " + str(self.id) + "\n"
+        info += "Title: " + self.title + "\n"
+        info += "Description: " + self.description + "\n"
+        info += "Started: " + str(self.start_date.date()) + "\n"
+        info += "Updated: " + str(self.updated_date.date()) + "\n"
+        info += "Ends: " + str(self.end_date.date()) + "\n"
+        info += "Minimum price: " + str(self.minimum_price) + "\n"
+
+        return info
 
 
 class Bid(models.Model):
