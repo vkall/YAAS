@@ -96,7 +96,7 @@ def edit_auction(request, id):
                     auction.description = form.cleaned_data["description"]
                     auction.save()
                     # If logged in user is the same as the seller and request is POST, save edits
-                    return HttpResponseRedirect("/YAAS/view_auction/" + str(auction.id) + "/")
+                    return HttpResponseRedirect("/YAAS/auction/" + str(auction.id) + "/")
             else:
                 form = EditAuctionForm({"description": auction.description})
             template = "edit_auction.html"

@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="col-md-5">
-        <form class="form-horizontal" action="/YAAS/edit_auction/{{ auction.id }}/" method="post">
+        <form class="form-horizontal" action="/YAAS/auction/{{ auction.id }}/edit/" method="post">
             {% csrf_token %}
             <fieldset>
                 <legend>Edit auction</legend>

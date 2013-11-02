@@ -3,7 +3,7 @@
 {% block title %}YAAS - Confirmation{% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" action="/YAAS/confirmation/" method="post">
+    <form class="form-horizontal" action="/YAAS/auction/create/confirmation/" method="post">
         {% csrf_token %}
         <h3>Are you sure you want to create the auction?</h3>
         {{ form.as_p }}

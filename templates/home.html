@@ -6,7 +6,7 @@
 
     <div class="row"><label class="control-label pull-right">Search by title or description:</label></div>
     <div class="row">
-        <form class="form-inline pull-right" action="/YAAS/search/" method="post">
+        <form class="form-inline pull-right" action="/YAAS/auction/search/" method="post">
             {% csrf_token %}
             <div class="form-group pull-left">
                 <input type="text" class="form-control" name="criteria" placeholder=" Search criteria">
@@ -29,7 +29,7 @@
             <tbody>
             {% for a in auctions %}
                 <tr>
-                    <td><a href="/YAAS/view_auction/{{ a.id }}/">{{ a.title }}</a></td>
+                    <td><a href="/YAAS/auction/{{ a.id }}/">{{ a.title }}</a></td>
                     <td>{{ a.description|truncatechars:20 }}</td>
                     <td>{{ a.seller.get_full_name }}</td>
                     <td>{{ a.end_date|date:"d.m.Y H:i" }}</td>

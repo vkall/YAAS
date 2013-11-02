@@ -16,8 +16,8 @@ class MyBlogTest(TestCase):
         self.username = "username"
         self.password = "password"
         self.user = User.objects.create_user(username=self.username, password=self.password)
-        self.createUrl = "/YAAS/create_auction/"
-        self.confirmationUrl = "/YAAS/confirmation/"
+        self.createUrl = "/YAAS/auction/create/"
+        self.confirmationUrl = "/YAAS/auction/create/confirmation/"
 
     def testAuthorizationCreateAuction(self):
         # If the client is not logged in, create_user should give a redirect status (302)

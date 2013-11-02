@@ -9,7 +9,7 @@ from YAAS_app.serializers import *
 
 @api_view(['GET'])
 def api_list_auctions(request, format=None):
-    # List all blog posts or create a new blog post
+    # List all auctions
 
     if request.method == 'GET':
         auctions = Auction.getActive()
@@ -20,7 +20,7 @@ def api_list_auctions(request, format=None):
 
 @api_view(['GET'])
 def api_search_auctions(request, criteria, format=None):
-    # List all blog posts or create a new blog post
+    # List all auctions that match the search criteria
 
     if request.method == 'GET':
         auctions = Auction.findActive(criteria)
