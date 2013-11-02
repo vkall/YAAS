@@ -118,11 +118,17 @@ def ban_auction(request, id):
         if request.user.is_superuser:
             auction.banned = True
             auction.save()
-            context = {"message": "Auction number " + str(auction.id) + " was banned!"}
-            # Auction banned, send email to seller
+
+            # Auction banned, send email to seller and bidders
+            receivers = [auction.seller.email,]
+            bidders = auction.getBidders()
+            for b in bidders:
+                receivers.append(b.email)
             message = "The following auction has been banned: \n\n"
             message += auction.information()
-            send_mail("Auction banned", message, "noreply@YAAS.com", [auction.seller.email], fail_silently=False)
+            send_mail("Auction banned", message, "noreply@YAAS.com", receivers, fail_silently=False)
+
+            context = {"message": "Auction number " + str(auction.id) + " was banned!"}
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
             context = {"message": "Must be admin to ban auction!"}

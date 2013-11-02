@@ -40,6 +40,16 @@ class Auction(models.Model):
         bids = Bid.getBidsForAuction(self)
         return bids
 
+    def getBidders(self):
+        bids = self.getBidHistory()
+        bidders = []
+        for b in bids:
+            if b.bidder not in bidders:
+                bidders.append(b.bidder)
+
+        return bidders
+
+
     def information(self):
         info = "ID: " + str(self.id) + "\n"
         info += "Title: " + self.title + "\n"
