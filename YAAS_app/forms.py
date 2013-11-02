@@ -25,7 +25,6 @@ class EditUserForm(forms.Form):
     email = forms.EmailField()
 
 
-
 class CreateAuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
@@ -46,6 +45,11 @@ class EditAuctionForm(forms.ModelForm):
         model = Auction
         fields = ('description',)
 
+
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = ('bid',)
 
 class ConfirmationForm(forms.Form):
     CHOICES = [(x, x) for x in ("Yes", "No")]

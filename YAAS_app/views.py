@@ -72,7 +72,7 @@ def view_auction(request, id):
     auction = Auction.getActiveById(id)
     if auction:
         template = "view_auction.html"
-        context = {"auction": auction}
+        context = {"auction": auction, "bid_history": auction.getBidHistory(), "bid_form": BidForm()}
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
@@ -137,7 +137,34 @@ def ban_auction(request, id):
 @login_required
 def bid_auction(request, id):
     auction = Auction.getActiveById(id)
-    return HttpResponseRedirect("/YAAS/")
+    if auction:
+        if request.user.id == auction.seller.id:
+            template = "message.html"
+            context = {"message": "You can't bid on your own auctions!"}
+            # Error: Seller tried to bid on own auction
+            return render_to_response(template, context, context_instance=RequestContext(request))
+        else:
+            if request.method == "POST":
+                form = BidForm(request.POST)
+                if form.is_valid():
+                    bid = Bid()
+                    bid.bid = form.cleaned_data["bid"]
+                    bid.auction = auction
+                    bid.bidder = request.user
+                    bid.save()
+                    # Create a bid
+                    return HttpResponseRedirect("/YAAS/auction/" + str(auction.id) + "/")
+            else:
+                form = BidForm()
+            template = "view_auction.html"
+            context = {"auction": auction, "bid_history": auction.getBidHistory(), "bid_form": form}
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        template = "message.html"
+        context = {"message": "Auction not found"}
+        # Error: Auction not found!
+        return render_to_response(template, context, context_instance=RequestContext(request))
+
 
 
 def register_user(request):

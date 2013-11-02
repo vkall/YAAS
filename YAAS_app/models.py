@@ -36,6 +36,10 @@ class Auction(models.Model):
         return cls.objects.filter((Q(title__contains=criteria) | Q(description__contains=criteria))
                                   & (Q(active=True) & Q(banned=False)))
 
+    def getBidHistory(self):
+        bids = Bid.getBidsForAuction(self)
+        return bids
+
     def information(self):
         info = "ID: " + str(self.id) + "\n"
         info += "Title: " + self.title + "\n"
@@ -54,3 +58,8 @@ class Bid(models.Model):
     bidder = models.ForeignKey(User)
     bid = models.DecimalField(max_digits=16, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def getBidsForAuction(cls, auction):
+        bids = cls.objects.filter(auction=auction).order_by("-timestamp")
+        return bids
