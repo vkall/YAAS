@@ -12,7 +12,7 @@ def api_list_auctions(request, format=None):
     # List all blog posts or create a new blog post
 
     if request.method == 'GET':
-        auctions = Auction.objects.all()
+        auctions = Auction.objects.filter(Q(active=True) & Q(banned=False))
         serializer = AuctionSerializer(auctions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else:

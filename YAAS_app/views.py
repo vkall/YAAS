@@ -12,7 +12,7 @@ from fixtures import *
 
 def home(request):
     template = "home.html"
-    context = {"auctions": Auction.objects.all()}
+    context = {"auctions": Auction.objects.filter(Q(active=True) & Q(banned=False))}
 
     return render_to_response(template, context, context_instance=RequestContext(request))
 

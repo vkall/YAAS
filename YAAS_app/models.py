@@ -12,6 +12,8 @@ class Auction(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     end_date = models.DateTimeField()
     minimum_price = models.DecimalField(max_digits=16, decimal_places=2)
+    active = models.BooleanField(default=True)
+    banned = models.BooleanField(default=False)
 
     @classmethod
     def getById(cls, auction_id):
