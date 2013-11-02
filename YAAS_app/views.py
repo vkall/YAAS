@@ -160,13 +160,20 @@ def bid_auction(request, id):
                 form = BidForm(request.POST)
                 if (form.is_valid() and form.cleaned_data["bid"] > auction.minimum_price
                         and form.cleaned_data["bid"] > latest_bid.bid):
-
+                    # Create a bid
                     bid = Bid()
                     bid.bid = form.cleaned_data["bid"]
                     bid.auction = auction
                     bid.bidder = request.user
                     bid.save()
-                    # Create a bid
+
+                    # Notify bidder, last bidder and seller by email
+                    receivers = [request.user.email, latest_bid.bidder.email, auction.seller.email]
+                    message = request.user.get_full_name() + " made a bid on the following auction: \n\n"
+                    message += auction.information()
+                    message += "\n\nThe new bid is " + str(bid.bid)
+                    send_mail("New bid on auction", message, "noreply@YAAS.com", receivers, fail_silently=False)
+
                     return HttpResponseRedirect("/YAAS/auction/" + str(auction.id) + "/")
             else:
                 form = BidForm()
