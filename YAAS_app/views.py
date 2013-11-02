@@ -134,6 +134,12 @@ def ban_auction(request, id):
         return render_to_response(template, context, context_instance=RequestContext(request))
 
 
+@login_required
+def bid_auction(request, id):
+    auction = Auction.getActiveById(id)
+    return HttpResponseRedirect("/YAAS/")
+
+
 def register_user(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
