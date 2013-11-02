@@ -34,7 +34,7 @@
                     <td>{{ a.seller.get_full_name }}</td>
                     <td>{{ a.end_date|date:"d.m.Y H:i" }}</td>
                     <td>{{ a.minimum_price|floatformat:2 }}</td>
-                    <td></td>
+                    <td>{{ a.getLatestBid|floatformat:2 }}</td>
                 </tr>
             {% endfor %}
             </tbody>

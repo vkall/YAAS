@@ -120,7 +120,7 @@ def ban_auction(request, id):
             auction.save()
 
             # Auction banned, send email to seller and bidders
-            receivers = [auction.seller.email,]
+            receivers = [auction.seller.email, ]
             bidders = auction.getBidders()
             for b in bidders:
                 receivers.append(b.email)
@@ -152,7 +152,10 @@ def bid_auction(request, id):
         else:
             if request.method == "POST":
                 form = BidForm(request.POST)
-                if form.is_valid():
+
+                if (form.is_valid() and form.cleaned_data["bid"] > auction.minimum_price
+                        and form.cleaned_data["bid"] > auction.getLatestBid()):
+
                     bid = Bid()
                     bid.bid = form.cleaned_data["bid"]
                     bid.auction = auction
@@ -170,7 +173,6 @@ def bid_auction(request, id):
         context = {"message": "Auction not found"}
         # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))
-
 
 
 def register_user(request):

@@ -40,6 +40,13 @@ class Auction(models.Model):
         bids = Bid.getBidsForAuction(self)
         return bids
 
+    def getLatestBid(self):
+        bid = Bid.getLatestBidForAuction(self)
+        if bid:
+            return bid.bid
+        else:
+            return 0.00
+
     def getBidders(self):
         bids = self.getBidHistory()
         bidders = []
@@ -73,3 +80,11 @@ class Bid(models.Model):
     def getBidsForAuction(cls, auction):
         bids = cls.objects.filter(auction=auction).order_by("-timestamp")
         return bids
+
+    @classmethod
+    def getLatestBidForAuction(cls, auction):
+        try:
+            bid = cls.objects.filter(auction=auction).latest("timestamp")
+        except ObjectDoesNotExist:
+            bid = None
+        return bid
