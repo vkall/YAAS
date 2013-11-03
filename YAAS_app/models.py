@@ -6,7 +6,7 @@ from django.db.models import Q
 
 class Auction(models.Model):
     id = models.AutoField(primary_key=True)
-    seller = models.ForeignKey(User)
+    seller = models.ForeignKey(User, related_name='seller')
     title = models.CharField(max_length=30)
     description = models.TextField()
     start_date = models.DateTimeField(auto_now_add=True)
@@ -15,6 +15,7 @@ class Auction(models.Model):
     minimum_price = models.DecimalField(max_digits=16, decimal_places=2)
     active = models.BooleanField(default=True)
     banned = models.BooleanField(default=False)
+    winner = models.ForeignKey(User, related_name='winner', null=True, blank=True)
 
     @classmethod
     def getActiveById(cls, auction_id):

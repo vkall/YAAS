@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'YAAS_app',
     'rest_framework',
+    'django_cron',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
@@ -162,10 +163,13 @@ LOGIN_REDIRECT_URL = '/YAAS/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+CRON_CLASSES = [
+    "YAAS.cronjobs.ResolveAuctions",
+]

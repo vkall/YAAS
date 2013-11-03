@@ -38,11 +38,10 @@ class MyBlogTest(TestCase):
         auctionData = {
             "title": "title",
             "description": "description",
-            "end_date": (timezone.now() + timedelta(days=4)).date(),
+            "end_date": (timezone.now() + timedelta(days=5)).date(),
             "minimum_price": 10.50,
             "option": "Yes"
         }
-
         # Login
         loggedIn = self.client.login(username=self.user1, password=self.user1)
         self.assertTrue(loggedIn)
