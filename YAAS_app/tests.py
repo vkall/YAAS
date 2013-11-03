@@ -12,10 +12,12 @@ from YAAS_app.forms import *
 
 
 class MyBlogTest(TestCase):
+
+    fixtures = ['test_fixture.json']
+
     def setUp(self):
-        self.username = "username"
-        self.password = "password"
-        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.user1 = "user1"
+        self.user2 = "user2"
         self.createUrl = "/YAAS/auction/create/"
         self.confirmationUrl = "/YAAS/auction/create/confirmation/"
 
@@ -25,15 +27,15 @@ class MyBlogTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
         # Login
-        loggedIn = self.client.login(username=self.username, password=self.password)
+        loggedIn = self.client.login(username=self.user1, password=self.user1)
         self.assertTrue(loggedIn)
 
-        # If the client is logged in, editblog should give a success status (200)
+        # If the client is logged in, create_user should give a success status (200)
         response = self.client.get(self.createUrl)
         self.assertEqual(response.status_code, 200)
 
     def testCreateAuction(self):
-        auctionData= {
+        auctionData = {
             "title": "title",
             "description": "description",
             "end_date": (timezone.now() + timedelta(days=4)).date(),
@@ -42,14 +44,11 @@ class MyBlogTest(TestCase):
         }
 
         # Login
-        loggedIn = self.client.login(username=self.username, password=self.password)
+        loggedIn = self.client.login(username=self.user1, password=self.user1)
         self.assertTrue(loggedIn)
 
-        # 0 auctions in database
-        self.assertEqual(Auction.objects.all().count(), 0)
-
+        auctions = Auction.objects.all().count()
         # create auction by posting data
         self.client.post(self.confirmationUrl, auctionData)
-
-        # 1 auction in database
-        self.assertEqual(Auction.objects.all().count(), 1)
+        # auction count is 1 higher than before
+        self.assertEqual(Auction.objects.all().count(), auctions+1)

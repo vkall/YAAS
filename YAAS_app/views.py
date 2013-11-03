@@ -2,12 +2,12 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from django.db.models import Q
-from YAAS_app.models import *
-from YAAS_app.forms import *
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from fixtures import *
+
+from YAAS_app.models import *
+from YAAS_app.forms import *
+from YAAS_app.fixtures.data_generation import *
 
 
 def home(request):
