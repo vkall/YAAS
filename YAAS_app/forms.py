@@ -51,6 +51,9 @@ class BidForm(forms.ModelForm):
         model = Bid
         fields = ('bid',)
 
+    updated = forms.DateTimeField(widget=forms.HiddenInput, required=False)
+
+
 class ConfirmationForm(forms.Form):
     CHOICES = [(x, x) for x in ("Yes", "No")]
     option = forms.ChoiceField(choices=CHOICES)

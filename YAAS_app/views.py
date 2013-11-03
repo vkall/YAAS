@@ -72,7 +72,8 @@ def view_auction(request, id):
     auction = Auction.getActiveById(id)
     if auction:
         template = "view_auction.html"
-        context = {"auction": auction, "bid_history": auction.getBidHistory(), "bid_form": BidForm()}
+        context = {"auction": auction, "bid_history": auction.getBidHistory(),
+                   "bid_form": BidForm(initial={"updated": auction.updated_date})}
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
@@ -160,23 +161,29 @@ def bid_auction(request, id):
                 form = BidForm(request.POST)
                 if (form.is_valid() and form.cleaned_data["bid"] > auction.minimum_price
                         and form.cleaned_data["bid"] > latest_bid.bid):
-                    # Create a bid
-                    bid = Bid()
-                    bid.bid = form.cleaned_data["bid"]
-                    bid.auction = auction
-                    bid.bidder = request.user
-                    bid.save()
+                    if form.cleaned_data['updated'] < auction.updated_date:
+                        template = "message.html"
+                        context = {"message": "Auction has changed since page was loaded, bid was not accepted."}
+                        # Error: auction has been updated, bid was not accepted.
+                        return render_to_response(template, context, context_instance=RequestContext(request))
+                    else:
+                        # Create a bid
+                        bid = Bid()
+                        bid.bid = form.cleaned_data["bid"]
+                        bid.auction = auction
+                        bid.bidder = request.user
+                        bid.save()
 
-                    # Notify bidder, last bidder and seller by email
-                    receivers = [request.user.email, latest_bid.bidder.email, auction.seller.email]
-                    message = request.user.get_full_name() + " made a bid on the following auction: \n\n"
-                    message += auction.information()
-                    message += "\n\nThe new bid is " + str(bid.bid)
-                    send_mail("New bid on auction", message, "noreply@YAAS.com", receivers, fail_silently=False)
+                        # Notify bidder, last bidder and seller by email
+                        receivers = [request.user.email, latest_bid.bidder.email, auction.seller.email]
+                        message = request.user.get_full_name() + " made a bid on the following auction: \n\n"
+                        message += auction.information()
+                        message += "\n\nThe new bid is " + str(bid.bid)
+                        send_mail("New bid on auction", message, "noreply@YAAS.com", receivers, fail_silently=False)
 
-                    return HttpResponseRedirect("/YAAS/auction/" + str(auction.id) + "/")
+                        return HttpResponseRedirect("/YAAS/auction/" + str(auction.id) + "/")
             else:
-                form = BidForm()
+                form = BidForm(initial={"updated": auction.updated_date})
             template = "view_auction.html"
             context = {"auction": auction, "bid_history": auction.getBidHistory(), "bid_form": form}
             return render_to_response(template, context, context_instance=RequestContext(request))
@@ -218,7 +225,7 @@ def edit_user(request):
             context = {"message": "User info successfully updated."}
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        form = EditUserForm({"email": user.email})
+        form = EditUserForm(initial={"email": user.email})
     template = "edit_user.html"
     context = {"user": user, "form": form}
     return render_to_response(template, context, context_instance=RequestContext(request))
