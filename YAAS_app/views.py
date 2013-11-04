@@ -231,6 +231,14 @@ def edit_user(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
+def change_language(request):
+    if request.method == "POST" and "language" in request.POST:
+        request.session['django_language'] = request.POST['language']
+        return HttpResponseRedirect("/YAAS/")
+    else:
+        return HttpResponseRedirect("/YAAS/")
+
+
 def populate_database(request):
     Populate().doPopulate()
     return HttpResponseRedirect("/YAAS/")

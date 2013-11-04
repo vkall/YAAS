@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block title %}YAAS{% endblock %}
 
 {% block content %}
 
-    <div class="row"><label class="control-label pull-right">Search by title or description:</label></div>
+    <div class="row"><label class="control-label pull-right">{% trans "Search by title or description:" %}</label></div>
     <div class="row">
         <form class="form-inline pull-right" action="/YAAS/auction/search/" method="post">
             {% csrf_token %}
@@ -18,12 +20,12 @@
         <table class="table table-striped table-hover">
             <thead>
             <tr>
-                <th>Auction title</th>
-                <th>Description</th>
-                <th>Seller</th>
-                <th>End date</th>
-                <th>Minimum price</th>
-                <th>Current bid</th>
+                <th>{% trans "Auction title" %}</th>
+                <th>{% trans "Description" %}</th>
+                <th>{% trans "Seller" %}</th>
+                <th>{% trans "End date" %}</th>
+                <th>{% trans "Minimum price" %}</th>
+                <th>{% trans "Current bid" %}</th>
             </tr>
             </thead>
             <tbody>
