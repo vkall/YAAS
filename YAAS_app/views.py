@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login
+from django.utils.translation import ugettext as _
 
 from YAAS_app.models import *
 from YAAS_app.forms import *
@@ -26,6 +28,34 @@ def search(request):
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         return HttpResponseRedirect("/YAAS/")
+
+
+def login_view(request):
+    template = "message.html"
+    if request.method == "POST":
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        nextTo = request.POST.get('next', '/YAAS/')
+        if nextTo == "":
+            nextTo = "/YAAS/"
+        user = authenticate(username=username, password=username)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                # Success
+                return change_language(request, nextTo)
+            else:
+                # Return a 'disabled account' error message
+                context = {"message": _("The account is disabled.")}
+                return render_to_response(template, context, context_instance=RequestContext(request))
+        else:
+            # Return an 'invalid login' error message.
+            context = {"message": _("Login failed.")}
+            return render_to_response(template, context, context_instance=RequestContext(request))
+    else:
+        context = {"message": _("Please sign in using the login form in the navigation bar."),
+                   "next": request.GET.get('next', '/YAAS/')}
+        return render_to_response(template, context, context_instance=RequestContext(request))
 
 
 @login_required
@@ -63,7 +93,7 @@ def confirmation(request):
             return HttpResponseRedirect("/YAAS/")
 
     template = "message.html"
-    context = {"message": "Auction was not created"}
+    context = {"message": _("Auction was not created")}
     # Auction was not created
     return render_to_response(template, context, context_instance=RequestContext(request))
 
@@ -77,7 +107,7 @@ def view_auction(request, id):
         return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
-        context = {"message": "Auction not found"}
+        context = {"message": _("Auction not found")}
         return render_to_response(template, context, context_instance=RequestContext(request))
 
 
@@ -87,7 +117,7 @@ def edit_auction(request, id):
     if auction:
         if request.user.id != auction.seller.id:
             template = "message.html"
-            context = {"message": "Only the seller of an auction can edit it!"}
+            context = {"message": _("Only the seller of an auction can edit it!")}
             # Error: Logged in user is not the same as the seller!
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
@@ -106,7 +136,7 @@ def edit_auction(request, id):
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
-        context = {"message": "Auction not found"}
+        context = {"message": _("Auction not found")}
         # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))
 
@@ -129,14 +159,14 @@ def ban_auction(request, id):
             message += auction.information()
             send_mail("Auction banned", message, "noreply@YAAS.com", receivers, fail_silently=False)
 
-            context = {"message": "Auction number " + str(auction.id) + " was banned!"}
+            context = {"message": _("Auction number ") + str(auction.id) + _(" was banned!")}
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
-            context = {"message": "Must be admin to ban auction!"}
+            context = {"message": _("Must be admin to ban auction!")}
             # Error: Logged in user is not an admin!
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
-        context = {"message": "Auction not found"}
+        context = {"message": _("Auction not found")}
         # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))
 
@@ -148,12 +178,12 @@ def bid_auction(request, id):
         latest_bid = Bid.getLatestBidForAuction(auction)
         if request.user.id == auction.seller.id:
             template = "message.html"
-            context = {"message": "You can't bid on your own auctions!"}
+            context = {"message": _("You can't bid on your own auctions!")}
             # Error: Seller tried to bid on own auction
             return render_to_response(template, context, context_instance=RequestContext(request))
         elif request.user.id == latest_bid.bidder.id:
             template = "message.html"
-            context = {"message": "You can't bid on an auction that you are already winning!"}
+            context = {"message": _("You can't bid on an auction that you are already winning!")}
             # Error: Winning bidder tried to bid again
             return render_to_response(template, context, context_instance=RequestContext(request))
         else:
@@ -163,7 +193,7 @@ def bid_auction(request, id):
                         and form.cleaned_data["bid"] > latest_bid.bid):
                     if form.cleaned_data['updated'] < auction.updated_date:
                         template = "message.html"
-                        context = {"message": "Auction has changed since page was loaded, bid was not accepted."}
+                        context = {"message": _("Auction has changed since page was loaded, bid was not accepted.")}
                         # Error: auction has been updated, bid was not accepted.
                         return render_to_response(template, context, context_instance=RequestContext(request))
                     else:
@@ -189,7 +219,7 @@ def bid_auction(request, id):
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         template = "message.html"
-        context = {"message": "Auction not found"}
+        context = {"message": _("Auction not found")}
         # Error: Auction not found!
         return render_to_response(template, context, context_instance=RequestContext(request))
 
@@ -201,7 +231,7 @@ def register_user(request):
             # Save user and show message
             form.save()
             template = "message.html"
-            context = {"message": "User successfully created, please login."}
+            context = {"message": _("User successfully created, please login.")}
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         # Empty user form
@@ -222,7 +252,7 @@ def edit_user(request):
             user.set_password(form.cleaned_data["password"])
             user.save()
             template = "message.html"
-            context = {"message": "User info successfully updated."}
+            context = {"message": _("User info successfully updated.")}
             return render_to_response(template, context, context_instance=RequestContext(request))
     else:
         form = EditUserForm(initial={"email": user.email})
@@ -231,17 +261,25 @@ def edit_user(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 
-def change_language(request):
+def change_language(request, next="/YAAS/"):
     if request.method == "POST" and "language" in request.POST:
+        # Changing language
         lan = request.POST['language']
         if request.user.is_authenticated():
+            # Save user language
             user_lang = request.user.language
             user_lang.language = lan
             user_lang.save()
-        request.session['django_language'] = lan
-        return HttpResponseRedirect("/YAAS/")
     else:
-        return HttpResponseRedirect("/YAAS/")
+        if request.user.is_authenticated():
+            # Loading user language
+            lan = request.user.language.language
+        else:
+            # Default language is english
+            lan = "en"
+
+    request.session['django_language'] = lan
+    return HttpResponseRedirect(next)
 
 
 def populate_database(request):

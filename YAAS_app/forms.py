@@ -3,12 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
 from YAAS_app.models import *
 from datetime import timedelta
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 
 class UserRegistrationForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
-    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30, required=True, label=_("First name"))
+    last_name = forms.CharField(max_length=30, required=True, label=_("Last name"))
+    email = forms.EmailField(required=True, label=_("Email"))
 
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=False)
@@ -21,8 +22,8 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class EditUserForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput)
-    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput, label=_("Password"))
+    email = forms.EmailField(label=_("Email"))
 
 
 class CreateAuctionForm(forms.ModelForm):

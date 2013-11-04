@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block title %}YAAS - {{ auction.title }}{% endblock %}
 
 {% block content %}
@@ -7,15 +9,15 @@
         <form class="form-horizontal" action="/YAAS/auction/{{ auction.id }}/edit/" method="post">
             {% csrf_token %}
             <fieldset>
-                <legend>Edit auction</legend>
-                <p><b>Auction ID:</b> {{ auction.id }}</p>
-                <p><b>Seller:</b> {{ auction.seller.get_full_name }}</p>
+                <legend>{% trans "Edit auction" %}</legend>
+                <p><b>{% trans "Auction ID:" %}</b> {{ auction.id }}</p>
+                <p><b>{% trans "Seller:" %}</b> {{ auction.seller.get_full_name }}</p>
                 {{ form.as_p }}
-                <p><b>Start date:</b> {{ auction.start_date|date:"d.m.Y H:i" }}</p>
-                <p><b>End date:</b> {{ auction.end_date|date:"d.m.Y H:i" }}</p>
-                <p><b>Minimum price:</b> {{ auction.minimum_price|floatformat:2 }}</p>
-                <p><b>Current bid:</b> {{ auction.current_bid|floatformat:2 }}</p>
-                <input type="submit" class="btn btn-primary" value="Save">
+                <p><b>{% trans "Start date:" %}</b> {{ auction.start_date|date:"d.m.Y H:i" }}</p>
+                <p><b>{% trans "End date:" %}</b> {{ auction.end_date|date:"d.m.Y H:i" }}</p>
+                <p><b>{% trans "Minimum price:" %}</b> {{ auction.minimum_price|floatformat:2 }}</p>
+                <p><b>{% trans "Current bid:" %}</b> {{ auction.current_bid|floatformat:2 }}</p>
+                <input type="submit" class="btn btn-primary" value={% trans "Save" %}>
             </fieldset>
         </form>
     </div>

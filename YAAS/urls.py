@@ -30,8 +30,7 @@ urlpatterns += patterns('',
     (r'^YAAS/auction/(?P<id>\d+)/ban/$', ban_auction),
     (r'^YAAS/user/register/$', register_user),
     (r'^YAAS/user/$', edit_user),
-    (r'^YAAS/login/$', login, {'template_name': 'message.html',
-                               'extra_context': {'message': 'Please sign in using the login form in the navigation bar.'}}),
+    (r'^YAAS/login/$', login_view),
     (r'^YAAS/logout/$', logout, {'next_page': '/YAAS/'}),
 
     # Comment the line below to disable database fixture

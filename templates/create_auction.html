@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}YAAS - Create auction{% endblock %}
+{% load i18n %}
+
+{% block title %}YAAS - {% trans "Create auction" %}{% endblock %}
 
 {% block content %}
     <div class="col-md-6">
         <form class="form-horizontal" action="/YAAS/auction/create/" method="post">
             {% csrf_token %}
             <fieldset>
-                <legend>Create a new auction</legend>
+                <legend>{% trans "Create a new auction" %}</legend>
                 {{ form.as_p }}
-                <input type="submit" class="btn btn-primary" value="Create auction">
+                <input type="submit" class="btn btn-primary" value={% trans "Create auction" %}>
             </fieldset>
         </form>
     </div>
