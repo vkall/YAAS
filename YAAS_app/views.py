@@ -210,6 +210,8 @@ def bid_auction(request, id):
                         bid.bidder = request.user
                         bid.save()
 
+                        # Soft deadlines, A bid made within 5 minutes of deadline
+                        # automatically extends the deadline with 5 minutes.
                         if (auction.end_date - timezone.now()).seconds < 5*60:
                             auction.end_date += timedelta(minutes=5)
                             auction.save()
