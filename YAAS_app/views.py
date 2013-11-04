@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login
 from django.utils.translation import ugettext as _
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 from YAAS_app.models import *
 from YAAS_app.forms import *
@@ -182,7 +183,7 @@ def bid_auction(request, id):
             context = {"message": _("You can't bid on your own auctions!")}
             # Error: Seller tried to bid on own auction
             return render_to_response(template, context, context_instance=RequestContext(request))
-        elif request.user.id == latest_bid.bidder.id:
+        elif latest_bid and request.user.id == latest_bid.bidder.id:
             template = "message.html"
             context = {"message": _("You can't bid on an auction that you are already winning!")}
             # Error: Winning bidder tried to bid again
@@ -196,7 +197,7 @@ def bid_auction(request, id):
             if request.method == "POST":
                 form = BidForm(request.POST)
                 if (form.is_valid() and form.cleaned_data["bid"] > auction.minimum_price
-                        and form.cleaned_data["bid"] > latest_bid.bid):
+                        and form.cleaned_data["bid"] > auction.getLatestBid()):
                     if form.cleaned_data['updated'] < auction.updated_date:
                         template = "message.html"
                         context = {"message": _("Auction has changed since page was loaded, bid was not accepted.")}
@@ -217,7 +218,9 @@ def bid_auction(request, id):
                             auction.save()
 
                         # Notify bidder, last bidder and seller by email
-                        receivers = [request.user.email, latest_bid.bidder.email, auction.seller.email]
+                        receivers = [request.user.email, auction.seller.email]
+                        if latest_bid:
+                            receivers.append(latest_bid.bidder.email)
                         message = request.user.get_full_name() + " made a bid on the following auction: \n\n"
                         message += auction.information()
                         message += "\n\nThe new bid is " + str(bid.bid)

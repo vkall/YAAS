@@ -12,10 +12,16 @@ admin.autodiscover()
 # RESTful API URLs
 urlpatterns = patterns('',
                        (r'^YAAS/api/auctions/$', api_list_auctions),
-                       (r'^YAAS/api/auctions/(?P<criteria>(\w\s*)+)/$', api_search_auctions),
+                       (r'^YAAS/api/auctions/(?P<id>\d+)/$', api_auction),
+                       (r'^YAAS/api/auctions/(?P<id>\d+)/bid/$', api_bid),
+                       (r'^YAAS/api/auctions/search/(?P<criteria>(\w\s*)+)/$', api_search_auctions),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+
+urlpatterns += patterns('',
+                        url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+)
 
 # Application URLs
 urlpatterns += patterns('',
