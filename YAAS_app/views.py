@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login
 from django.utils.translation import ugettext as _
+from datetime import datetime, timedelta
 
 from YAAS_app.models import *
 from YAAS_app.forms import *
@@ -186,6 +187,11 @@ def bid_auction(request, id):
             context = {"message": _("You can't bid on an auction that you are already winning!")}
             # Error: Winning bidder tried to bid again
             return render_to_response(template, context, context_instance=RequestContext(request))
+        elif auction.end_date <= timezone.now():
+            template = "message.html"
+            context = {"message": _("Auction has ended, bid not accepted!")}
+            # Error: Auction expired
+            return render_to_response(template, context, context_instance=RequestContext(request))
         else:
             if request.method == "POST":
                 form = BidForm(request.POST)
@@ -203,6 +209,10 @@ def bid_auction(request, id):
                         bid.auction = auction
                         bid.bidder = request.user
                         bid.save()
+
+                        if (auction.end_date - timezone.now()).seconds < 5*60:
+                            auction.end_date += timedelta(minutes=5)
+                            auction.save()
 
                         # Notify bidder, last bidder and seller by email
                         receivers = [request.user.email, latest_bid.bidder.email, auction.seller.email]
