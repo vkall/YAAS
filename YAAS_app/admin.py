@@ -3,3 +3,4 @@ from YAAS_app.models import *
 
 admin.site.register(Auction)
 admin.site.register(Bid)
+admin.site.register(UserLanguage)

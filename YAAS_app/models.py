@@ -89,3 +89,11 @@ class Bid(models.Model):
         except ObjectDoesNotExist:
             bid = None
         return bid
+
+
+class UserLanguage(models.Model):
+    user = models.OneToOneField(User)
+    language = models.CharField(max_length=10, default="en")
+
+User.language = property(lambda u: UserLanguage.objects.get_or_create(user=u)[0])
+

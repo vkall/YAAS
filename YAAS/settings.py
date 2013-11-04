@@ -173,6 +173,6 @@ REST_FRAMEWORK = {
 
 LOCALE_PATHS = ('locale',)
 
-CRON_CLASSES = [
-    "YAAS.cronjobs.ResolveAuctions",
-]
+CRON_CLASSES = ["YAAS.cronjobs.ResolveAuctions",]
+
+AUTH_PROFILE_MODULE = "YAAS_app.UserLanguage"

@@ -233,7 +233,12 @@ def edit_user(request):
 
 def change_language(request):
     if request.method == "POST" and "language" in request.POST:
-        request.session['django_language'] = request.POST['language']
+        lan = request.POST['language']
+        if request.user.is_authenticated():
+            user_lang = request.user.language
+            user_lang.language = lan
+            user_lang.save()
+        request.session['django_language'] = lan
         return HttpResponseRedirect("/YAAS/")
     else:
         return HttpResponseRedirect("/YAAS/")
